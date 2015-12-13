@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./templatelogin.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core">
+    <ui:define name="content">
+        <h:form id="form">  
+            <p:growl id="growl" showDetail="true" life="3000" />  
+            <div id="test" style="
+                 width: 445px;
+                 margin: 10% auto;
+                 height: 355px;
+                 border: 1px solid #efefef;
+                 background: #FFFFFF;
+                 border-radius: 8px;
+                 padding: 13px;">
+                <img id="imgAvatarLogin" src="./resources/imgs/logoFSW.png"/>
+
+                <div id="boxUrs">
+                    <p>Usuário</p>
+                    <p:inputText value="#{loginBean.username}"   
+                                 id="username" required="true" label="username" />  
+                </div>   
+                <p>Senha</p>
+                <div id="boxPassordLogin">
+                    <h:inputSecret value="#{loginBean.password}"   
+                                   id="password" required="true" label="password" />  
+                    <p:commandButton id="loginButton" icon="ui-icon-check" update="growl"   
+                                     actionListener="#{loginBean.login()}"   
+                                     />  
+                </div> 
+            </div>
+        </h:form>  
+       
+    </ui:define>
+</ui:composition>

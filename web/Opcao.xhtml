@@ -1,0 +1,153 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <p:panel header="Cadastro de Opções">
+            <h:form id="frmGrid" styleClass="formGrid">  
+             
+
+                <p:growl id="msgs" showDetail="true"/>  
+                <p:panelGrid columns="3" >
+                    <p:column>
+                        Escolha um Menu:
+                    </p:column>
+                    <p:column>
+                        <p:selectOneMenu id="cmbMenus" value="#{opcaoMB.idtMenu}" effect="fold" editable="false">
+                            <f:selectItem itemLabel="Todos os Menus" itemValue="0" /> 
+                            <f:selectItems value="#{opcaoMB.menus}" var="menu" 
+                                           itemLabel="#{menu.sglMenu}" itemValue="#{menu.idtMenu}"/>  
+                        </p:selectOneMenu> 
+                    </p:column>
+                    <p:column>
+                        <p:commandButton value="Buscar" actionListener="#{opcaoMB.filtrar}" update=":frmGrid:msgs, :frmGrid:dtbOpcaos" icon="ui-icon-search"/>
+                    </p:column>
+                </p:panelGrid>
+
+                <p:dataTable id="dtbOpcaos" var="opcao" reflow="true" value="#{opcaoMB.opcaos}"   paginator="true" rows="5">  
+
+                    <p:column >  
+                        <f:facet name="header">
+                            <h:outputText value="Identificador" />
+                        </f:facet>
+                        <h:outputText value="#{opcao.idtOpcao}" />  
+                    </p:column>  
+                    <p:column >  
+                        <f:facet name="header">
+                            <h:outputText value="Sigla do Menu" />
+                        </f:facet>
+                        <h:outputText value="#{opcao.tbMenu.sglMenu}" />  
+                    </p:column> 
+
+                    <p:column  > 
+                        <f:facet name="header">
+                            <h:outputText value="Sigla" />
+                        </f:facet>
+                        <h:outputText value="#{opcao.sglOpcao}" />  
+                    </p:column>  
+
+                    <p:column  > 
+                        <f:facet name="header">
+                            <h:outputText value="Url" />
+                        </f:facet>
+                        <h:outputText value="#{opcao.urlOpcao}" />  
+                    </p:column> 
+
+                    <p:column  > 
+                        <f:facet name="header">
+                            <h:outputText value="Ord" />
+                        </f:facet>
+                        <h:outputText value="#{opcao.ordOpcao}" />  
+                    </p:column> 
+
+              
+                  
+
+                    <p:column  >  
+                        <f:facet name="header">
+                            <h:outputText value="Operação" />
+                        </f:facet>
+                       
+                            
+                                <p:commandButton id="btnEditar" update=":frmForm:pngEditar" oncomplete="PF('dlgOpcaoView').show()" icon="ui-icon-pencil" value="Editar">  
+                                    <f:setPropertyActionListener value="#{opcao}" target="#{opcaoMB.tbOpcao}" />  
+                                </p:commandButton>  
+                            
+                                <p:commandButton id="btnExcluir" update=":frmExcluir:dlgConfExclusao" oncomplete="PF('dlgConfExclusaoView').show()" icon="ui-icon-trash" value="Excluir">  
+                                    <f:setPropertyActionListener value="#{opcao}" target="#{opcaoMB.tbOpcao}" />  
+                                </p:commandButton>  
+                            
+                      
+                    </p:column>  
+
+                </p:dataTable>  
+
+                <p:commandButton id="btnNovo" update=":frmForm:pngEditar" actionListener="#{opcaoMB.novo}" oncomplete="PF('dlgOpcaoView').show()" icon="ui-icon-star" value="Novo" ajax="true"/> 
+            </h:form> 
+
+            <p:dialog responsive="true" header="Editar" widgetVar="dlgOpcaoView" resizable="false" id="dlgOpcao"  
+                      showEffect="fade" hideEffect="explode" modal="true">  
+                <h:form id="frmForm">
+                    <p:panelGrid id="pngEditar" columns="2" style="margin:0 auto;">  
+
+
+                        <p:column>
+                            <h:outputText value="Menu:" />  
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="cmbMenus" value="#{opcaoMB.idtMenu}" effect="fold" editable="false">
+                                <f:selectItem itemLabel="--- Escolha um Menu ---" itemValue="0" /> 
+                                <f:selectItems value="#{opcaoMB.menus}" var="menu" 
+                                               itemLabel="#{menu.sglMenu}" itemValue="#{menu.idtMenu}"/>  
+                                <f:validateLongRange minimum="1"/>
+                            </p:selectOneMenu> 
+                        </p:column>
+
+                        <p:column>
+                            <h:outputText value="Sigla:" />  
+                        </p:column>
+                        <p:column>
+                            <h:inputText id="sglOpcao" value="#{opcaoMB.tbOpcao.sglOpcao}" size="30" required="true" requiredMessage="Sigla da Op&ccedil;ão &eacute; Obrigat&oacute;rio"/>  
+                        </p:column>
+
+                        <p:column>
+                            <h:outputText value="Url:" />  
+                        </p:column>
+                        <p:column>
+                            <h:inputText id="urlOpcao" value="#{opcaoMB.tbOpcao.urlOpcao}" size="30" required="true" requiredMessage="Descri&ccedil;ão da Op&ccedil;ão &eacute; Obrigat&oacute;rio"/>  
+                        </p:column>
+
+                        <p:column>
+                            <h:outputText value="Ord:" />  
+                        </p:column>
+                        <p:column>
+                            <h:inputText id="ordOpcao" value="#{opcaoMB.tbOpcao.ordOpcao}" size="30" required="true" requiredMessage="Ord da Op&ccedil;ão &eacute; Obrigat&oacute;rio"/>  
+                        </p:column>
+
+                   
+
+                        <p:column>
+                            <p:commandButton id="btnSalvar" actionListener="#{opcaoMB.salvar}" update=":frmForm:pngEditar, :frmGrid:dtbOpcaos, :frmGrid:msgs" icon="ui-icon-disk" value="Salvar" ajax="true" />  
+                        </p:column>
+                      
+                    </p:panelGrid>  
+                </h:form>
+            </p:dialog>  
+
+            <h:form id="frmExcluir">
+                <p:confirmDialog id="dlgConfExclusao" message="Tem certeza que deseja excluir (#{opcaoMB.tbOpcao.sglOpcao})?"  
+                                 header="Exclusão de registro" severity="alert" widgetVar="dlgConfExclusaoView">  
+                    <p:commandButton id="btnConfirm" value="Sim" update=":frmGrid:dtbOpcaos, :frmGrid:msgs" oncomplete="PF('dlgConfExclusaoView').hide()" actionListener="#{opcaoMB.excluir}" />  
+                    <p:commandButton id="btnDecline" value="Não" onclick="PF('dlgConfExclusaoView').hide()" type="button" />   
+                </p:confirmDialog> 
+            </h:form>
+
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

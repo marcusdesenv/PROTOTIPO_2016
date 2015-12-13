@@ -1,0 +1,297 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <p:panel header="Cadastro de Usuarios">
+            <h:form id="frmGrid" styleClass="formGrid">
+
+                <p:growl id="msgs" showDetail="true"/>  
+                <p:panelGrid columns="2">
+                    <p:column>
+                        Digite o nome do Usuario:
+                    </p:column>
+                    <p:column>
+                        <p:inputText size="80" value="#{usuarioMB.nomeUsuario}"/>
+                    </p:column>
+
+                    <p:column>
+                        Escolha um Perfil:
+                    </p:column>
+                    <p:column>
+                        <p:selectOneMenu id="cmbPessoas" value="#{usuarioMB.idtPerfil}" effect="fold" editable="false">
+                            <f:selectItem itemLabel="Todos os Pessoas" itemValue="0" /> 
+                            <f:selectItems value="#{usuarioMB.perfis}" var="perfis" 
+                                           itemLabel="#{perfis.nmePerfil}" itemValue="#{perfis.idtPerfil}"/>  
+                        </p:selectOneMenu> 
+                    </p:column>
+
+                </p:panelGrid>
+                <p:column>
+                    <p:commandButton value="Buscar" actionListener="#{usuarioMB.filtrar}" update=":frmGrid:msgs, :frmGrid:dtbUsuarios" icon="ui-icon-search"/>
+                </p:column>
+
+                <p:dataTable reflow="true" id="dtbUsuarios" var="usuario" value="#{usuarioMB.usuarios}"  paginator="true" rows="5">
+                    <p:column  >
+                        <f:facet name="header">
+                            <h:outputText value="Identificador" />
+                        </f:facet>
+                        <h:outputText value="#{usuario.idtUsuario}"/>
+                    </p:column>
+
+                    <p:column  >
+                        <f:facet name="header">
+                            <h:outputText value="Nome" />
+                        </f:facet>
+                        <h:outputText value="#{usuario.nmeUsuario}"/>
+                    </p:column>
+                    <p:column  >  
+                        <f:facet name="header">
+                            <h:outputText value="Perfil" />
+                        </f:facet>
+                        <h:outputText value="#{usuario.tbPerfil.nmePerfil}" />  
+                    </p:column>  
+
+
+                    <p:column >
+                        <f:facet name="header">
+                            <h:outputText value="CPF" />
+                        </f:facet>
+                        <h:outputText value="#{usuario.cpfUsuario}" />
+                    </p:column>
+
+
+
+
+                    <p:column  >
+                        <f:facet name="header">
+                            <h:outputText value="Status" />
+                        </f:facet>
+                        <h:outputText value="Ativo" rendered="#{usuario.stsUsuario eq true}"/>
+                        <h:outputText value="Inativo" rendered="#{usuario.stsUsuario eq false}"/>
+                    </p:column>
+
+
+
+                    <p:column >  
+                        <f:facet name="header">
+                            <h:outputText value="Operação" />
+                        </f:facet>
+
+
+                        <p:commandButton id="btnEditar" update=":frmForm:pngEditar" oncomplete="PF('dlgUsuarioEditarView').show()" icon="ui-icon-pencil" value="Editar">  
+                            <f:setPropertyActionListener value="#{usuario}" target="#{usuarioMB.tbUsuario}" />  
+                        </p:commandButton>  
+
+                        <p:commandButton id="btnRedefinirSenha" update=":frmRedefinir:pngRedefinirSenha" oncomplete="PF('dlgRedefinirView').show()" icon="ui-icon-pencil" value="Redefinir Senha">  
+                            <f:setPropertyActionListener value="#{usuario}" target="#{usuarioMB.tbUsuario}" />  
+                        </p:commandButton>  
+
+                        <p:commandButton id="btnExcluir" update=":frmExcluir:dlgConfExclusao" oncomplete="PF('dlgConfExclusaoView').show()" icon="ui-icon-trash" value="Excluir">  
+                            <f:setPropertyActionListener value="#{usuario}" target="#{usuarioMB.tbUsuario}" />  
+                        </p:commandButton>  
+
+
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton id="btnNovo" update=":frmFormNovo:pngNovo" actionListener="#{usuarioMB.novo}" oncomplete="PF('dlgUsuarioNovoView').show()" icon="ui-icon-star" value="Novo" ajax="true"/>             
+            </h:form> 
+
+            <p:dialog responsive="true" header="Editar" widgetVar="dlgUsuarioEditarView" resizable="false" id="dlgUsuarioEditar"  
+                      showEffect="fade" hideEffect="explode" modal="true">  
+                <h:form id="frmForm">
+                    <p:panelGrid id="pngEditar" columns="2" style="margin:0 auto;">  
+
+
+                        <p:column>
+                            <h:outputText value="Nome:" />  
+                        </p:column>
+                        <p:column>
+                            <h:inputText id="nmeUsuario" value="#{usuarioMB.tbUsuario.nmeUsuario}" size="30" required="true"  requiredMessage="Nome da Usuario é Obrigatório"/>  
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="Perfil:" />  
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="cmbPerfis" value="#{usuarioMB.idtPerfil}" effect="fold" editable="false">
+                                <f:selectItem itemLabel="--- Escolha um Perfil ---" itemValue="0" /> 
+                                <f:selectItems value="#{usuarioMB.perfis}" var="perfil" 
+                                               itemLabel="#{perfil.nmePerfil}" itemValue="#{perfil.idtPerfil}"/>  
+                                <f:validateLongRange minimum="1"/>
+                            </p:selectOneMenu> 
+                        </p:column> 
+
+                        <p:column>
+                            <h:outputText value="CPF:" />  
+                        </p:column>
+                        <p:column>
+                            <h:inputText id="cpfUsuario" maxlength="11" value="#{usuarioMB.tbUsuario.cpfUsuario}" size="30" required="true" requiredMessage="CPF é Obrigatório"/>  
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="Telefone:" />  
+                        </p:column>
+                        <p:column>
+                            <p:inputMask id="telUsuario" value="#{usuarioMB.tbUsuario.telUsuario}" mask="(99) 9999-9999" />  
+                        </p:column>
+
+                        <p:column>
+                            <h:outputText value="Endereço:" />  
+                        </p:column>
+                        <p:column>
+                            <h:inputText id="endUsuario" value="#{usuarioMB.tbUsuario.endUsuario}" size="30"/>  
+                        </p:column>
+
+                        <p:column>
+                            <h:outputText value="Data de Nascimento:"  />  
+                        </p:column>
+                        <p:column>
+                            <p:calendar  id="dtaNascimento" value="#{usuarioMB.tbUsuario.dtaNascUsuario}"  locale="pt"  pattern="dd/MM/yyyy"  navigator="true" maxlength="10" mindate="01/01/0001" maxdate="31/12/9999" />
+                        </p:column>
+
+                        <p:column>
+                            <h:outputText value="Status:" />  
+                        </p:column>
+                        <p:column>
+                            <p:selectBooleanButton value="#{usuarioMB.tbUsuario.stsUsuario}" onLabel="Ativo" offLabel="Inativo" requiredMessage="Status &eacute; Obrigat&oacute;rio" />  
+
+                        </p:column>
+
+
+
+                    </p:panelGrid>  
+                    <br/>
+                    <p:commandButton id="btnSalvar" actionListener="#{usuarioMB.salvar}" update=":frmForm:pngEditar, :frmGrid:dtbUsuarios, :frmGrid:msgs" icon="ui-icon-disk" value="Salvar" ajax="true" style="float: right;"/>  
+                </h:form>
+            </p:dialog>
+            <p:dialog responsive="true" header="Novo" widgetVar="dlgUsuarioNovoView" resizable="false" id="dlgUsuarioNovo"  
+                      showEffect="fade" hideEffect="explode" modal="true">  
+                <h:form id="frmFormNovo">
+                    <p:panelGrid id="pngNovo" columns="2" style="margin:0 auto;">  
+
+
+                        <p:column>
+                            <h:outputText value="Nome:" />  
+                        </p:column>
+                        <p:column>
+                            <h:inputText id="nmeUsuario" value="#{usuarioMB.tbUsuario.nmeUsuario}" size="30" required="true"  requiredMessage="Nome da Usuario é Obrigatório"/>  
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="Perfil:" />  
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="cmbPerfis" value="#{usuarioMB.idtPerfil}" effect="fold" editable="false">
+                                <f:selectItem itemLabel="--- Escolha um Perfil ---" itemValue="0" /> 
+                                <f:selectItems value="#{usuarioMB.perfis}" var="perfil" 
+                                               itemLabel="#{perfil.nmePerfil}" itemValue="#{perfil.idtPerfil}"/>  
+                                <f:validateLongRange minimum="1"/>
+                            </p:selectOneMenu> 
+                        </p:column> 
+
+                        <p:column>
+                            <h:outputText value="CPF:" />  
+                        </p:column>
+                        <p:column>
+                            <h:inputText id="cpfUsuario" value="#{usuarioMB.tbUsuario.cpfUsuario}" size="30" required="true" requiredMessage="CPF é Obrigatório"/>  
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="Telefone:" />  
+                        </p:column>
+                        <p:column>
+                            <p:inputMask id="telUsuario" value="#{usuarioMB.tbUsuario.telUsuario}" mask="(99) 9999-9999" />  
+                        </p:column>
+
+                        <p:column>
+                            <h:outputText value="Endereço:" />  
+                        </p:column>
+                        <p:column>
+                            <h:inputText id="endUsuario" value="#{usuarioMB.tbUsuario.endUsuario}" size="30"/>  
+                        </p:column>
+
+                        <p:column>
+                            <h:outputText value="Data de Nascimento:"  />  
+                        </p:column>
+                        <p:column>
+                            <p:calendar id="dtaNascimento" value="#{usuarioMB.tbUsuario.dtaNascUsuario}" locale="pt" pattern="dd/MM/yyyy"  navigator="true" maxlength="10"  />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="Nome de Usuário:" />  
+                        </p:column>
+                        <p:column>
+                            <h:inputText id="usrUsuario" value="#{usuarioMB.tbUsuario.usrUsuario}" size="30" required="true" requiredMessage="Nome de Usuário é Obrigatório"/>  
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="Senha:" />  
+                        </p:column>
+                        <p:column>
+
+                            <p:password id="pwd1" value="#{usuarioMB.tbUsuario.pwdUsuario}" match="pwd2" label="Password 1" required="true"/>  
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="Confirmação :" />  
+                        </p:column>
+                        <p:column>
+                            <p:password id="pwd2" value="#{usuarioMB.tbUsuario.pwdUsuario}" label="Password 2" required="true"/>  
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="Status:" />  
+                        </p:column>
+                        <p:column>
+                            <p:selectBooleanButton value="#{usuarioMB.tbUsuario.stsUsuario}" onLabel="Ativo" offLabel="Inativo" requiredMessage="Status é Obrigatório" />  
+
+                        </p:column>
+
+
+
+
+                    </p:panelGrid>  
+                    <br/>
+                    <p:commandButton id="btnSalvar" actionListener="#{usuarioMB.salvar}" update=":frmFormNovo:pngNovo, :frmGrid:dtbUsuarios, :frmGrid:msgs" icon="ui-icon-disk" value="Salvar" ajax="true" style="float: right;"/>  
+                </h:form>
+            </p:dialog>
+
+            <p:dialog responsive="true" header="Redefinir Senha" widgetVar="dlgRedefinirView" resizable="false" id="dlgRedefinir"  
+                      showEffect="fade" hideEffect="explode" modal="true">  
+                <h:form id="frmRedefinir">
+                    <p:panelGrid id="pngRedefinirSenha" columns="2" style="margin:0 auto;">  
+
+                        <p:column>
+                            <h:outputText value="Nome de Usuário:" />  
+                        </p:column>
+                        <p:column>
+                            <h:inputText id="usrUsuario" value="#{usuarioMB.tbUsuario.usrUsuario}" size="30" required="true" requiredMessage="Nome de Usuário &eacute; Obrigat&oacute;rio"/>  
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="Senha:" />  
+                        </p:column>
+                        <p:column>
+
+                            <p:password id="pwd1" value="#{usuarioMB.tbUsuario.pwdUsuario}" match="pwd2" label="Password 1" required="true"/>  
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="Confirmação :" />  
+                        </p:column>
+                        <p:column>
+                            <p:password id="pwd2" value="#{usuarioMB.tbUsuario.pwdUsuario}" label="Password 2" required="true"/>  
+                        </p:column>
+                    </p:panelGrid>  
+                    <br/>
+                    <p:commandButton id="btnSalvar" actionListener="#{usuarioMB.salvarNovaSenha()}" update=":frmRedefinir:pngRedefinirSenha, :frmGrid:dtbUsuarios, :frmGrid:msgs" icon="ui-icon-disk" value="Salvar" ajax="true"/>
+                </h:form>
+            </p:dialog>
+            <h:form id="frmExcluir">
+                <p:confirmDialog id="dlgConfExclusao" message="Tem certeza que deseja excluir (#{usuarioMB.tbUsuario.nmeUsuario})?"  
+                                 header="Exclusão de registro" severity="alert" widgetVar="dlgConfExclusaoView">  
+                    <p:commandButton id="btnConfirm" value="Sim" update=":frmGrid:dtbUsuarios, :frmGrid:msgs" oncomplete="PF('dlgConfExclusaoView').hide()" actionListener="#{usuarioMB.excluir}" />  
+                    <p:commandButton id="btnDecline" value="Não" onclick="PF('dlgConfExclusaoView').hide()" type="button" />   
+                </p:confirmDialog> 
+            </h:form>
+
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

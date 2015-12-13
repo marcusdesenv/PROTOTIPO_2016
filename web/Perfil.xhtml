@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <p:panel header="Cadastro de Perfis">
+            <h:form id="frmGrid" styleClass="formGrid"> 
+           
+
+                <p:growl id="msgs" showDetail="true"/>  
+
+
+                <p:dataTable  id="dtbPerfis" var="perfil" reflow="true" value="#{perfilMB.perfis}"  paginator="true" rows="5">  
+
+                    <p:column > 
+                        <f:facet name="header">
+                            <h:outputText value="Identificador" />
+                        </f:facet>
+                        <h:outputText value="#{perfil.idtPerfil}" />  
+                    </p:column>  
+                    <p:column >  
+                        <f:facet name="header">
+                            <h:outputText value="Nome" />
+                        </f:facet>
+                        <h:outputText value="#{perfil.nmePerfil}" />  
+                    </p:column>  
+
+                    <p:column  >  
+                        <f:facet name="header">
+                            <h:outputText value="Ord" />
+                        </f:facet>
+                        <h:outputText value="#{perfil.ordPerfil}" />  
+                    </p:column> 
+
+                   
+                    <p:column  > 
+                        <f:facet name="header">
+                            <h:outputText value="Operação" />
+                        </f:facet>
+                    
+                                <p:commandButton id="btnEditar" update=":frmForm:pngEditar" oncomplete="PF('dlgPerfilView').show()" icon="ui-icon-pencil" value="Editar">  
+                                    <f:setPropertyActionListener value="#{perfil}" target="#{perfilMB.tbPerfil}" />  
+                                </p:commandButton>  
+                           
+
+                            
+                                <p:commandButton id="btnExcluir" update=":frmExcluir:dlgConfExclusao" oncomplete="PF('dlgConfExclusaoView').show()" icon="ui-icon-trash" value="Excluir">  
+                                    <f:setPropertyActionListener value="#{perfil}" target="#{perfilMB.tbPerfil}" />  
+                                </p:commandButton>  
+                          
+                                <p:commandButton id="btnOpcoes" update=":frmProc:pngOpcoes" oncomplete="PF('dlgOpcoesView').show()" icon="ui-icon-clipboard" value="Selecionar Opções">  
+                                    <f:setPropertyActionListener value="#{perfil}" target="#{perfilMB.tbPerfil}" />  
+                                </p:commandButton>  
+                           
+                    </p:column>  
+
+                </p:dataTable>  
+
+                <p:commandButton id="btnNovo" update=":frmForm:pngEditar" actionListener="#{perfilMB.novo}" oncomplete="PF('dlgPerfilView').show()" icon="ui-icon-star" value="Novo" ajax="true"/> 
+            </h:form> 
+
+            <p:dialog responsive="true" header="Editar" widgetVar="dlgPerfilView" resizable="false" id="dlgPerfil"  
+                      showEffect="fade" hideEffect="explode" modal="true">  
+                <h:form id="frmForm">
+                    <p:panelGrid id="pngEditar" columns="2" style="margin:0 auto;">  
+
+                        <p:column>
+                            <h:outputText value="Nome Perfil:" />  
+                        </p:column>
+                        <p:column>
+                            <h:inputText id="nmePerfil" value="#{perfilMB.tbPerfil.nmePerfil}" size="30" required="true" requiredMessage="Ord do Perfil &eacute; Obrigat&oacute;rio"/>  
+                        </p:column>
+
+
+                        <p:column>
+                            <h:outputText value="Ord:" />  
+                        </p:column>
+                        <p:column>
+                            <h:inputText id="ordPerfil" value="#{perfilMB.tbPerfil.ordPerfil}" size="30" required="true" requiredMessage="Ord do Perfil &eacute; Obrigat&oacute;rio"/>  
+                        </p:column>
+
+                    
+
+
+
+                        <p:column>
+                            <p:commandButton id="btnSalvar" actionListener="#{perfilMB.salvar}" update=":frmForm:pngEditar, :frmGrid:dtbPerfis, :frmGrid:msgs" icon="ui-icon-disk" value="Salvar" ajax="true" />  
+                        </p:column>
+                      
+                    </p:panelGrid>  
+                </h:form>
+            </p:dialog>  
+            <p:dialog responsive="true" header="Selecionar Opções" widgetVar="dlgOpcoesView" resizable="false" id="dlgOpcoes"  
+                      showEffect="fade" hideEffect="explode" modal="true">  
+                <h:form id="frmProc">
+                    <p:panelGrid id="pngOpcoes" columns="2" style="margin:0 auto;">  
+                        <p:column>
+                            <h:outputText value="Perfil:" />  
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{perfilMB.tbPerfil.nmePerfil}" />  
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="Opções :" />  
+                        </p:column>
+                        <p:column>
+                            <p:pickList id="pklProc" converter="convertTbOpcao"
+                                        value="#{perfilMB.opcoes}" var="opc" itemLabel="#{opc.sglOpcao}" itemValue="#{opc}">
+                                <f:facet name="sourceCaption">Disponíveis</f:facet>  
+                                <f:facet name="targetCaption">Escolhidos</f:facet>
+                            </p:pickList>
+                        </p:column>
+                        <p:column>
+                            <p:commandButton id="btnSalvarProc" actionListener="#{perfilMB.salvarProc}" 
+                                             update=" :frmProc:pngOpcoes" icon="ui-icon-disk" value="Salvar Opções" oncomplete="PF('dlgOpcoesView').hide()" ajax="true"/>  
+                        </p:column>
+
+                    </p:panelGrid>  
+                </h:form>
+                <p:ajax event="close" />
+            </p:dialog> 
+
+            <h:form id="frmExcluir">
+                <p:confirmDialog id="dlgConfExclusao" message="Tem certeza que deseja excluir o perfil de (#{perfilMB.tbPerfil.nmePerfil})?"  
+                                 header="Exclusão de registro" severity="alert" widgetVar="dlgConfExclusaoView">  
+                    <p:commandButton id="btnConfirm" value="Sim" update=":frmGrid:dtbPerfis, :frmGrid:msgs" oncomplete="PF('dlgConfExclusaoView').hide()" actionListener="#{perfilMB.excluir}" />  
+                    <p:commandButton id="btnDecline" value="Não" onclick="PF('dlgConfExclusaoView').hide()" type="button" />   
+                </p:confirmDialog> 
+            </h:form>
+
+
+
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

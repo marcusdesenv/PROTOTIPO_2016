@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <p:panel header="Cadastro de Menus">
+            <h:form id="frmGrid" styleClass="formGrid">  
+
+
+                <p:growl id="msgs" showDetail="true"/>  
+
+
+                <p:dataTable id="dtbMenus"  reflow="true" var="menu" value="#{menuMB.menus}"  paginator="true" 
+                             rows="5">  
+
+                    <p:column  > 
+                        <f:facet name="header">
+                            <h:outputText value="Identificador" />
+                        </f:facet>
+                        <h:outputText value="#{menu.idtMenu}" />  
+                    </p:column>  
+                    <p:column  > 
+                        <f:facet name="header">
+                            <h:outputText value="Sigla" />
+                        </f:facet>
+                        <h:outputText value="#{menu.sglMenu}" />  
+                    </p:column>  
+                    <p:column  > 
+                        <f:facet name="header">
+                            <h:outputText value="Ord" />
+                        </f:facet>
+                        <h:outputText value="#{menu.ordMenu}" />  
+                    </p:column>
+
+
+                    <p:column  >
+                        <f:facet name="header">
+                            <h:outputText value="Operação" />
+                        </f:facet>
+
+                        <p:commandButton  id="btnEditar" update=":frmForm:pngEditar" oncomplete="PF('dlgMenuView').show()" icon="ui-icon-pencil" value="Editar">  
+                            <f:setPropertyActionListener value="#{menu}" target="#{menuMB.tbMenu}" />  
+                        </p:commandButton>  
+
+                        <p:commandButton id="btnExcluir" update=":frmExcluir:dlgConfExclusao" oncomplete="PF('dlgConfExclusaoView').show()" icon="ui-icon-trash" value="Excluir">  
+                            <f:setPropertyActionListener value="#{menu}" target="#{menuMB.tbMenu}" />  
+                        </p:commandButton>  
+
+                    </p:column>  
+
+                </p:dataTable>  
+
+                <p:commandButton id="btnNovo" update=":frmForm:pngEditar" actionListener="#{menuMB.novo}" oncomplete="PF('dlgMenuView').show()" icon="ui-icon-star" value="Novo" ajax="true"/> 
+            </h:form> 
+
+            <p:dialog responsive="true" header="Editar" widgetVar="dlgMenuView" resizable="false" id="dlgMenu"  
+                      showEffect="fade" hideEffect="explode" modal="true">  
+                <h:form id="frmForm">
+                    <p:panelGrid id="pngEditar" columns="2" style="margin:0 auto;">  
+
+
+
+
+                        <p:column>
+                            <h:outputText value="Sigla:" />  
+                        </p:column>
+                        <p:column>
+                            <h:inputText id="sglMenu" value="#{menuMB.tbMenu.sglMenu}" size="30" required="true" requiredMessage="Sigla do Menu &eacute; Obrigat&oacute;rio"/>  
+                        </p:column>
+
+
+
+                        <p:column>
+                            <h:outputText value="Ord:" />  
+                        </p:column>
+                        <p:column>
+                            <h:inputText id="ordMenu" value="#{menuMB.tbMenu.ordMenu}" size="30" required="true" requiredMessage="Ord do Menu &eacute; Obrigat&oacute;rio"/>  
+                        </p:column>
+
+
+
+                        <p:column>
+                            <p:commandButton id="btnSalvar" actionListener="#{menuMB.salvar}" update=":frmForm:pngEditar, :frmGrid:dtbMenus, :frmGrid:msgs" icon="ui-icon-disk" value="Salvar" ajax="true" />  
+                        </p:column>
+                      
+                    </p:panelGrid>  
+                </h:form>
+            </p:dialog>  
+
+            <h:form id="frmExcluir">
+                <p:confirmDialog   id="dlgConfExclusao" message="Tem certeza que deseja excluir (#{menuMB.tbMenu.sglMenu})?"  
+                                   header="Exclusão de registro" severity="alert" widgetVar="dlgConfExclusaoView">  
+                    <p:commandButton id="btnConfirm" value="Sim" update=":frmGrid:dtbMenus, :frmGrid:msgs" oncomplete="PF('dlgConfExclusaoView').hide()" actionListener="#{menuMB.excluir}" />  
+                    <p:commandButton id="btnDecline" value="Não" onclick="PF('dlgConfExclusaoView').hide()" type="button" />   
+                </p:confirmDialog> 
+            </h:form>
+
+        </p:panel>
+    </ui:define>
+
+</ui:composition>

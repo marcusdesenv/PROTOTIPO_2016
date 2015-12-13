@@ -1,0 +1,95 @@
+
+#top {
+    position: relative;
+    color: white;
+    
+    margin: 0px 0px 10px 0px;
+}
+
+#bottom {
+    position: relative;
+    padding: 5px;
+    margin: 10px 0px 0px 0px;
+}
+
+#left {
+    float: left;
+
+    height: 500px; 
+    width: 185px;
+    font-size: 10px;
+}
+
+#right {
+    float: right;
+    padding: 5px;
+    width: 200px;
+}
+
+.center_content {
+    position: relative;
+    padding: 5px;
+}
+
+.left_content {
+  
+    margin-left: 200px;
+}
+.formGrid{
+   
+    height:  570px;
+   
+}
+.right_content {
+    padding: 5px;
+    margin: 0px 220px 0px 220px;
+}
+
+#top a:link, #top a:visited {
+  color: white;
+  font-weight : bold;
+  text-decoration: none;
+}
+
+#top a:link:hover, #top a:visited:hover  {
+  color: black;
+  font-weight : bold;
+  text-decoration : underline;
+}
+
+
+#boxAcessoNegado{margin: 7% auto; width: 50%;text-align: center;}
+
+#boxAcessoNegado p{font-size: 100px;text-transform: uppercase;margin-top: 10px;}
+
+#boxPassordLogin{float: left;width: 100%;}
+
+#boxPassordLogin input:focus,#boxUrs input:focus{outline: none;background: #F3F3F3;}
+
+#boxPassordLogin input[type="password"]{padding: 8px;
+width: 87%;
+margin-right: 4px;
+border: 1px solid #e5e5e5;
+border-radius: 4px;
+}
+
+
+p{font-size: 19px;
+color: #388792;}
+
+#imgAvatarLogin{
+    
+}
+
+
+#boxUrs input{padding: 8px;
+box-shadow: none;
+width: 95%;
+border: 1px solid #e5e5e5;
+}
+
+#frmForm .ui-panelgrid td {
+    border: none;
+}
+
+ 
